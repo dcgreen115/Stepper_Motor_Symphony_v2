@@ -83,8 +83,3 @@ int sms::Serial::tryRead(std::vector<unsigned char>& buffer, std::size_t length)
     return 0;
 }
 
-
-
-
-
-
