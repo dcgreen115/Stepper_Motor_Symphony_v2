@@ -1,5 +1,3 @@
-
-
 #include <catch2/catch_test_macros.hpp>
 #include <thread>
 #include "MessageQueue.hpp"
@@ -38,23 +36,23 @@ void pushThread(sms::MessageQueue<int>* queue) {
 }
 
 TEST_CASE("Test multi threaded usage", "[MessageQueue]") {
-    sms::MessageQueue<int> q;
-    q.push(123);
+    sms::MessageQueue<int> queue;
+    queue.push(123);
 
     int n1;
-    std::thread waitPop = std::thread(waitPopThread, &q, std::ref(n1));
+    std::thread waitPop = std::thread(waitPopThread, &queue, std::ref(n1));
     waitPop.join();
     REQUIRE(n1 == 123);
 
     int n2 = 500;
-    std::thread tryPop = std::thread(tryPopThread, &q, std::ref(n2));
+    std::thread tryPop = std::thread(tryPopThread, &queue, std::ref(n2));
     tryPop.join();
     REQUIRE(n2 == 500);
 
-    std::thread push = std::thread(pushThread, &q);
+    std::thread push = std::thread(pushThread, &queue);
     push.join();
     int n3;
-    std::thread tryPop2 = std::thread(tryPopThread, &q, std::ref(n3));
+    std::thread tryPop2 = std::thread(tryPopThread, &queue, std::ref(n3));
     tryPop2.join();
     REQUIRE(n3 == 1000);
 }
