@@ -1,0 +1,8 @@
+# IDE config files
+.idea/
+
+# Build files
+cmake-build-debug/
+
+# MIDI files
+*.mid
