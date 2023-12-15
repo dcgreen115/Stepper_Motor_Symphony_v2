@@ -3,13 +3,15 @@ cmake_minimum_required(VERSION 3.22)
 set(CMAKE_CXX_STANDARD 20)
 
 set(LIB_SOURCE
-        Serial.hpp Serial.cpp Exceptions.hpp)
+        Serial.hpp Serial.cpp
+        MessageQueue.hpp MessageQueue.tpp
+        Exceptions.hpp)
 
 set(LIB_TEST_SOURCE
-        SerialTests.cpp)
+        SerialTests.cpp MessageQueueTests.cpp)
 
 set(TRANSMITTER_SOURCE
-        main.cpp Exceptions.hpp)
+        main.cpp)
 
 add_executable(transmitter ${TRANSMITTER_SOURCE} ${LIB_SOURCE})
 
