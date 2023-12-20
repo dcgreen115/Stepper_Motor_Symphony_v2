@@ -1,8 +1,14 @@
 # IDE config files
 .idea/
+.vscode/
 
 # Build files
 cmake-build-debug/
+build/
+
+# ESP8266 SDK configuration files
+sdkconfig
+sdkconfig.old
 
 # MIDI files
 *.mid
