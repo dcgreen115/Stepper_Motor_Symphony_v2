@@ -1,0 +1,15 @@
+//
+// Created by dylangreen on 12/21/23.
+//
+
+#ifndef STEPPER_MOTOR_SYMPHONY_V2_SERIALTRANSMITTHREAD_HPP
+#define STEPPER_MOTOR_SYMPHONY_V2_SERIALTRANSMITTHREAD_HPP
+
+namespace sms {
+    class SerialTransmitThread {
+
+    };
+
+}
+
+#endif //STEPPER_MOTOR_SYMPHONY_V2_SERIALTRANSMITTHREAD_HPP
