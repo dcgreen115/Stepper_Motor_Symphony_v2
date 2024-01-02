@@ -15,6 +15,7 @@ set(TRANSMITTER_SOURCE
 
 add_executable(transmitter ${TRANSMITTER_SOURCE} ${LIB_SOURCE})
 
+target_include_directories(transmitter PRIVATE ../common)
 target_link_libraries(transmitter libremidi)
 
 # Add tests
