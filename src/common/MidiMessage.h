@@ -1,15 +1,12 @@
 
 // A message encoding a MIDI event, to be sent over serial
 typedef struct MidiMessage {
-    // The status byte will be made up of a Function OR'ed with a Channel
     uint8_t status;
-    // The values in the data bytes will have different meanings depending
-    // on the Function in the status byte
     uint8_t data[2];
 } MidiMessage;
 
 // A message's function represents a command for the receiving device. These will
-// make up the upper 4 bits of a status byte
+// make up the upper 4 bits of the status byte
 // Values taken from https://www.midi.org/specifications/midi-reference-tables/expanded-midi-1-0-messages-list-status-bytes
 typedef enum Function {
     NOTE_OFF = 0x80,
@@ -22,7 +19,7 @@ typedef enum Function {
 } Function;
 
 // The channel associated with some MIDI functions. These will make up the lower
-// 4 bits of a status byte
+// 4 bits of the status byte
 typedef enum Channel {
     CHANNEL0,
     CHANNEL1,
