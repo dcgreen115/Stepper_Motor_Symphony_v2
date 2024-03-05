@@ -50,6 +50,7 @@ namespace sms {
          */
         void processEvent(const libremidi::track_event& event);
 
+        void processMetaEvent(const libremidi::track_event& event);
 
         // Member variables
 

@@ -2,7 +2,9 @@
 // Created by dylangreen on 12/21/23.
 //
 
+#include <iostream>
 #include "MidiPlayerThread.hpp"
+#include "MidiMessage.h"
 
 namespace sms {
     MidiPlayerThread::MidiPlayerThread(MessageQueue<ControlMessage>* messageQueue, libremidi::reader* midiReader,
@@ -122,18 +124,37 @@ namespace sms {
 
     void MidiPlayerThread::processEvent(const libremidi::track_event &event) {
         if (event.m.is_meta_event()) {
+            processMetaEvent(event);
+            return;
+        }
 
-        } else {
-            switch (event.m.get_message_type()) {
-                case libremidi::message_type::NOTE_ON:
-                    break;
-                case libremidi::message_type::NOTE_OFF:
-                    break;
-                case libremidi::message_type::CONTROL_CHANGE:
-                    break;
-                default:
-                    break;
+        switch (event.m.get_message_type()) {
+            case libremidi::message_type::NOTE_ON:
+            case libremidi::message_type::NOTE_OFF:
+            case libremidi::message_type::CONTROL_CHANGE: {
+                std::lock_guard<std::mutex> lock(*serialMutex);
+                MidiMessage message;
+                message.status = event.m.bytes[0];
+                message.data[0] = event.m.bytes[1];
+                message.data[1] = event.m.bytes[2];
+                serial->write(&message, sizeof(message));
+                break;
             }
+            default:
+                // Do nothing for PROGRAM_CHANGE, AFTERTOUCH, POLY_PRESSURE
+                // and PITCH_BEND
+                break;
+        }
+    }
+
+    void MidiPlayerThread::processMetaEvent(const libremidi::track_event &event) {
+        // We only want to handle tempo events right now
+        if (event.m.bytes[1] == 0x51) {
+            // This event always has 3 data bytes, starting at index 3
+            auto bytes = event.m.bytes;
+            uint32_t microsPerBeat = 0 | (bytes[3] << 16) | (bytes[4] << 8) | bytes[5];
+            double microsPerTick = static_cast<double>(microsPerBeat) / reader->ticksPerBeat;
+            tickDuration = std::chrono::duration<double, std::micro>(microsPerTick);
         }
     }
 }
