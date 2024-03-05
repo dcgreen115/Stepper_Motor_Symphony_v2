@@ -13,12 +13,12 @@ namespace sms {
     class Serial {
     public:
         Serial() = delete;
-        Serial(const std::string& port_name, const termios& tty);
+        Serial(const std::string& portName, const termios& tty);
 
         ~Serial();
 
-        void write(unsigned char msg[], std::size_t length) const;
-        int tryRead(std::vector<unsigned char>& buffer, std::size_t length) const;
+        void write(const void* data, unsigned int size) const;
+        int tryRead(void* buffer, unsigned int size) const;
 
         static std::vector<std::string> getDevices();
     private:

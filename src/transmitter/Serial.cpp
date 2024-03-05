@@ -14,8 +14,8 @@
 #include <cstring>
 #include <sys/ioctl.h>
 
-sms::Serial::Serial(const std::string& port_name, const termios& tty) {
-    serialPortFD = open(port_name.c_str(), O_RDWR);
+sms::Serial::Serial(const std::string& portName, const termios& tty) {
+    serialPortFD = open(portName.c_str(), O_RDWR);
 
     // There was an error opening the port
     if (serialPortFD < 0) {
@@ -61,23 +61,21 @@ std::vector<std::string> sms::Serial::getDevices() {
     return devices;
 }
 
-void sms::Serial::write(unsigned char *msg, std::size_t length) const {
-    if (::write(serialPortFD, msg, length) == -1) {
+void sms::Serial::write(const void* const data, unsigned int size) const {
+    if (::write(serialPortFD, data, size) == -1) {
         throw SerialPortException(std::strerror(errno));
     }
 }
 
-int sms::Serial::tryRead(std::vector<unsigned char>& buffer, std::size_t length) const {
+int sms::Serial::tryRead(void* const buffer, unsigned int size) const {
     int bytesAvailable;
     ioctl(serialPortFD, FIONREAD, &bytesAvailable);
 
-    if (bytesAvailable < length) {
+    if (bytesAvailable < size) {
         return -1;
     }
 
-    buffer.resize(length);
-
-    if (::read(serialPortFD, buffer.data(), length) == -1) {
+    if (::read(serialPortFD, buffer, size) == -1) {
         throw SerialPortException(std::strerror(errno));
     }
     return 0;
